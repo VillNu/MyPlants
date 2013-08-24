@@ -19,13 +19,20 @@
 package nu.vill.myplants;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
+/**
+ * I actually don't know if this is called.
+ * @author Magnus
+ */
 public class ListItem extends TextView{
+
+	private static final String TAG = "ListItem";
 
 	public ListItem(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
+		Log.v(TAG,"I exist, therefore I troll!");
 	}
 
 }

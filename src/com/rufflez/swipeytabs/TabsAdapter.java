@@ -1,7 +1,7 @@
+/*
+ * This file is taken from Andrew Ruffalos example on Swipeytabs on Youtube with some minor modifications (Magnus Duberg)
+ */
 package com.rufflez.swipeytabs;
-
-//This file is taken from com.rufflez.swipeytabs with soom minor modifikations (Magnus Duberg)
-
 
 import java.util.ArrayList;
 

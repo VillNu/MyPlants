@@ -37,37 +37,51 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.widget.Toast;
 
+
+// TODO Change from Ruffalos FragmentPagerAdapter to a FragmentStatePagerAdapter for memory conservation reasons
 /**
- * Contains the view which show a tab for each patch for a certain garden
- * Has a description area for the patch and an Add-button which produces
- * a Dialog instance for creating a new plant.
+ * This activity and its instance of TabsAdapter is based on example code by Andrew Ruffolo.
+ * It uses ActionbarSherlock with tabs and Pageviewer for swiping between the tabs/fragments.
+ * The tabs/fragments contains the patches for a certain garden.
+ * Each fragment has a description area for the patch and an "Add plant"-button which produces
+ * a dialog user input for creating a new plant.
  * @author Magnus
  */
 public class GardenActivity extends SherlockFragmentActivity 
 					implements NewPlantDialogFragment.NewPlantDialogListener{
 
-	public static final String EXTRA_GARDEN = "nu.vill.myplants.GARDEN"; //identifier for bundled data
+	// Constants
+	public static final String EXTRA_GARDEN_ID = "nu.vill.myplants.GARDEN_ID"; //identifier for bundled data
+	public static final String EXTRA_GARDEN_NAME = "nu.vill.myplants.GARDEN_NAME"; //identifier for bundled data
 	public static final String TAG = "GardenActivity"; // Log tag
-	private TabsAdapter tabsAdapter;
+	
+	// 
+	private TabsAdapter tabsAdapter; // holds the fragments for 
 	private ActionBar actionBar;
 	private String url;
 
+	/**
+	 * 
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		ViewPager viewPager = new ViewPager(this);
-		viewPager.setId(R.id.pager);
-		setContentView(viewPager);
-			
+		// Setup the action bar (backward compatibility provided by the
+		// actionbarsherlock package
 		actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(getIntent().getStringExtra(EXTRA_GARDEN_NAME));
 
+		// Sets the activity viewpager and its adapter (other ways of doing it?)
+		ViewPager viewPager = new ViewPager(this);
+		viewPager.setId(R.id.pager);
+		setContentView(viewPager);
 		tabsAdapter = new TabsAdapter(this, viewPager);
-		// get the right patch
-		url = getString(R.string.patches_url) + getIntent().getStringExtra(EXTRA_GARDEN);
-		
+
+		// Get the right patch
+		url = getString(R.string.patches_url) + getIntent().getIntExtra(EXTRA_GARDEN_ID, 0);
 	} 
 	
 	/**
@@ -109,9 +123,9 @@ public class GardenActivity extends SherlockFragmentActivity
 		protected void onPostExecute(String backgroundResult) {
 			super.onPostExecute(backgroundResult);
 			
+			//TODO Question. Can the reference to tabsAdapter and actionBar leak the Activity?
 			try { // Add tabs for each patch in this garden
-				JSONArray jArray = new JSONArray(backgroundResult); // Create JSON array with patches
-				
+				JSONArray jArray = new JSONArray(backgroundResult); // Create JSON array with patches				
 				if (tabsAdapter.getCount() != jArray.length()) { // Check if tabs are already created
 					for (int i = 0; i < jArray.length(); i++){ // Work through the array of patches
 						JSONObject json = jArray.getJSONObject(i); // Extract a patch

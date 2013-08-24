@@ -20,54 +20,68 @@ package nu.vill.myplants;
 
 import nu.vill.myplants.model.Garden;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+/**
+ * Populates a list of Garden objects for the Main activity.
+ * @author Magnus
+ */
 public class MainAdapter extends ArrayAdapter<Garden>{
 
-	private static final String TAG = "MainAdapter";
-	Garden[] gardens;
-	Context context;
-	LayoutInflater layoutInflater;
-	int layout;
+	//private static final String TAG = "MainAdapter"; // Log tag
+
+	LayoutInflater layoutInflater; // into which context to inflate
+	int layout; // the layout
+	Garden[] gardens; // the data set
 	
+	/**
+	 * Sets up the inflater, the data set and the layout
+	 * @param c the containing activity
+	 * @param layout the XML layout for each view
+	 * @param gardens the data set
+	 */
 	public MainAdapter(Context c, int layout, Garden[] gardens){
 		super(c, layout, gardens);
-		this.gardens = gardens;
-		this.context = c;
 		layoutInflater = (LayoutInflater)
 				c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.layout = layout;
+		this.gardens = gardens;
 	}
 	
+	/**
+	 * 
+	 */
 	@Override
 	public int getCount() {
 		return gardens.length;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public Garden getItem(int position) {
 		return gardens[position];
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+	/**
+	 * Returns an inflated view displaying data for the given garden
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View currentView = convertView;
-		if (currentView == null)
-			currentView = layoutInflater.inflate(layout, parent,false);
-
-		Log.i(TAG,"position=" + position);
-		Log.i(TAG, "currentView=" + currentView.toString());
-		Log.i(TAG,"parent=" + parent.toString());		
-		
+		if (currentView == null) currentView = layoutInflater.inflate(layout, parent,false);
 		TextView gardenName = (TextView) currentView.findViewById(R.id.textPlant);
 		gardenName.setText(gardens[position].getName());
 		TextView gardenDesc = (TextView) currentView.findViewById(R.id.textPlant2);

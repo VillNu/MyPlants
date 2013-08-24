@@ -48,7 +48,8 @@ import android.widget.Toast;
 public class MainActivity extends SherlockActivity {
 
 	protected static final int GARDEN_ID = 0;
-	public static final String EXTRA_GARDEN = "nu.vill.myplants.GARDEN";
+	public static final String EXTRA_GARDEN_ID = "nu.vill.myplants.GARDEN_ID";
+	public static final String EXTRA_GARDEN_NAME = "nu.vill.myplants.GARDEN_NAME";
 	private static final String TAG = "MainActivity";
 	ArrayList<Garden> gardens = new ArrayList<Garden>();
 	ArrayAdapter<Garden> gardensAdapter;
@@ -70,8 +71,7 @@ public class MainActivity extends SherlockActivity {
 			@Override
 			public void onItemClick(AdapterView<?> adapter, View view, int pos,
 					long id) {
-				Garden garden = (Garden) adapter.getItemAtPosition(pos);
-				openGardenActivity(String.valueOf(garden.getId()));				
+				openGardenActivity((Garden) adapter.getItemAtPosition(pos));				
 			}
 		});
 
@@ -109,11 +109,12 @@ public class MainActivity extends SherlockActivity {
 
 	/**
 	 * Opens activity to manage the garden with the given id
-	 * @param garden_id
+	 * @param garden
 	 */
-	private void openGardenActivity(String garden_id){
+	private void openGardenActivity(Garden garden){
 		Intent intent = new Intent(this, GardenActivity.class);
-		intent.putExtra(EXTRA_GARDEN, garden_id);
+		intent.putExtra(EXTRA_GARDEN_ID, garden.getId());
+		intent.putExtra(EXTRA_GARDEN_NAME, garden.getName());
 		startActivity(intent);
 	}
 
