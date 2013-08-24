@@ -1,3 +1,21 @@
+/*
+ * Connection.java
+ * 
+ * Copyright (C) 2013 Magnus Duberg 
+ *
+ * Licensed under the Want Now License, Version 0.q (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at 
+ *
+ *      http://vill.nu/licenses/WANT-NOW-LICENSE-0.q
+ *
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ */
+
 package nu.vill.myplants;
 
 import java.util.ArrayList;
@@ -35,6 +53,7 @@ public class MainActivity extends SherlockActivity {
 	ArrayList<Garden> gardens = new ArrayList<Garden>();
 	ArrayAdapter<Garden> gardensAdapter;
 	ListView listView;
+	AsyncTask<?,?,?> gardenDownload;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +71,6 @@ public class MainActivity extends SherlockActivity {
 			public void onItemClick(AdapterView<?> adapter, View view, int pos,
 					long id) {
 				Garden garden = (Garden) adapter.getItemAtPosition(pos);
-				toast("You have pressed id " + id + "\nGarden id: "
-						+ garden.getId());
 				openGardenActivity(String.valueOf(garden.getId()));				
 			}
 		});
@@ -61,57 +78,66 @@ public class MainActivity extends SherlockActivity {
 		updateList();
 	}
 
+
+	/**
+	 * Does nothing since its state is recovered from the server
+	 */
 	@Override
 	protected void onResume() {
-		Log.i(TAG,"MainActivity resumed (task id:"+this.getTaskId()+")");
+		Log.v(TAG,"MainActivity resumed (task id:"+this.getTaskId()+")");
 		super.onResume();	
 	}
 
+	/**
+	 * Cancels unnecessary updates of this Activity (the list of gardens)
+	 */
 	@Override
 	protected void onDestroy() {
-		Log.i(TAG,"MainActivity destroyed (task id:"+this.getTaskId()+")");
+		gardenDownload.cancel(true);
+		Log.v(TAG,"MainActivity destroyed (task id:"+this.getTaskId()+")");
 		super.onDestroy();
 	}
 	
 	
-	
-	/* Not needed when ActionBarSherlock is used	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+	/**
+	 * Updates the list of gardens off the background thread and keeps a
+	 * reference to it so it can be killed onDestroy
 	 */
-
-	/* (non-Javadoc)
-	 * @see com.actionbarsherlock.app.SherlockActivity#onDestroy()
-	 */
-
 	private void updateList(){
-		new ListOfGardensDownloader().execute(getString(R.string.gardens_url));
+		gardenDownload = new ListOfGardensDownloader().execute(getString(R.string.gardens_url));
 	}
 
+	/**
+	 * Opens activity to manage the garden with the given id
+	 * @param garden_id
+	 */
 	private void openGardenActivity(String garden_id){
 		Intent intent = new Intent(this, GardenActivity.class);
 		intent.putExtra(EXTRA_GARDEN, garden_id);
 		startActivity(intent);
 	}
 
-
+	/**
+	 * Makes toasting shorter
+	 * @param message
+	 */
 	protected void toast(String message){
 		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Downloads gardens from server off the main thread and updates the list of gardens
+	 * the String passed to the  must be well formed URL and the response from the server must contain
+	 * some gardens formatted as an JSON object
+	 * @author Magnus
+	 */
 	private class ListOfGardensDownloader extends AsyncTask<String, Void, String> {
-		@Override
-		protected void onPreExecute(){		}
-
+		
 		@Override
 		protected String doInBackground(String... urls) {
-			return new Connection().query(urls[0]);
+			return new Connection().query(urls[0]); // downloads the gardens
 		}
-
+		
 		@Override
 		protected void onPostExecute(String backgroundResult) {
 			super.onPostExecute(backgroundResult);
@@ -119,16 +145,23 @@ public class MainActivity extends SherlockActivity {
 		}
 	}
 
+	/**
+	 * Updates the list with the given gardens
+	 * @param gardens array of Garden objects
+	 */
 	private void updateListViewAdapter(Garden[] gardens){
 		gardensAdapter = new MainAdapter(this, R.layout.list_item, gardens);
 		listView.setAdapter(gardensAdapter);	
 	}
 
-
+	/**
+	 * Converts a JSON formatted string of gardens to a Garden array
+	 * @param strJasons JSON formatted string containing gardens 
+	 * @return array of Garden objects
+	 */
 	public static Garden[] strJasonsToGardenArray(String strJasons){
-
 		Garden[] gardenArray = null;
-		try { Log.d(TAG, "Converting to array..");
+		try {
 		JSONArray jArray = new JSONArray(strJasons);
 		gardenArray = new Garden[jArray.length()];
 		for (int i = 0; i < jArray.length(); i++){
@@ -144,9 +177,13 @@ public class MainActivity extends SherlockActivity {
 		return gardenArray;
 	}
 
-
+	
+	/**
+	 * Potentially useful for coming function "View plant web info"
+	 * @param webURL
+	 */
 	void openWebPage(String webURL){
-		/*temp*/	if(webURL.length() < 1)	webURL = "http://sv.wikipedia.org/w/index.php?search=" + "Orkidé";
+		/*temp*/	if(webURL.length() < 1)	webURL = "http://sv.wikipedia.org/w/index.php?search=" + "Orkidï¿½";
 
 		// Build the Intent
 		Uri webpage = Uri.parse(webURL);
@@ -169,6 +206,8 @@ public class MainActivity extends SherlockActivity {
 		}
 	}
 
+	/* Not needed when ActionBarSherlock is used	
+	@Override	public boolean onCreateOptionsMenu(Menu menu) 	 */
 }
 
 

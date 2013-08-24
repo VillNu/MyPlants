@@ -1,6 +1,7 @@
 package com.rufflez.swipeytabs;
 
-//This file is taken from com.rufflez.swipeytabs with a few modifikations
+//This file is taken from com.rufflez.swipeytabs with soom minor modifikations (Magnus Duberg)
+
 
 import java.util.ArrayList;
 
@@ -10,9 +11,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -69,7 +67,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabLi
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		mViewPager.setCurrentItem(tab.getPosition());
-		Log.e(TAG, "clicked");
 		Object tag = tab.getTag();
 		for (int i = 0; i<mTabs.size(); i++){
 			if (mTabs.get(i) == tag){
@@ -80,7 +77,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements ActionBar.TabLi
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-		Toast.makeText(mContext, "You've deselected a tab", Toast.LENGTH_SHORT).show();
+		//Toast.makeText(mContext, "You've deselected a tab", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

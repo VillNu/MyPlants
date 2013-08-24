@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">My plants</string>
+    <string name="app_name">My plants - my gardens</string>
     <string name="title_activity_garden">Patches</string>
     <string name="action_settings">Settings</string>
 
@@ -20,5 +20,6 @@
     <string name="new_plant_desc_label">Description</string>
     <string name="new_plant_positive_button">Save</string>
     <string name="new_plant_negative_button">Cancel</string>
+    <string name="new_plant_toast">New plant has been added!</string>
     
 </resources>
