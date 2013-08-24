@@ -1,3 +1,7 @@
+/*
+ * Connection.java
+ * This class provides an object which query() method
+ */
 package nu.vill.data;
 
 import java.io.BufferedReader;
