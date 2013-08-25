@@ -61,7 +61,7 @@ public class GardenActivity extends SherlockFragmentActivity
 	private String url;
 
 	/**
-	 * 
+	 * Sets up 
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +89,7 @@ public class GardenActivity extends SherlockFragmentActivity
 	 */
 	@Override
 	protected void onResume() {
+		Log.v(TAG,"Resumed");
 		new GardenDownloader().execute(url);		
 		super.onResume();
 	}
@@ -103,7 +104,7 @@ public class GardenActivity extends SherlockFragmentActivity
 	}
 	
 	/**
-	 * Creates a tab for each patch
+	 * Creates tabs for the patches in the garden with the specified garden id
 	 * @author Magnus
 	 */
 	private class GardenDownloader extends AsyncTask<String, Void, String> {
@@ -122,10 +123,10 @@ public class GardenActivity extends SherlockFragmentActivity
 		@Override
 		protected void onPostExecute(String backgroundResult) {
 			super.onPostExecute(backgroundResult);
-			
 			//TODO Question. Can the reference to tabsAdapter and actionBar leak the Activity?
 			try { // Add tabs for each patch in this garden
-				JSONArray jArray = new JSONArray(backgroundResult); // Create JSON array with patches				
+				JSONArray jArray = new JSONArray(backgroundResult); // Create JSON array with patches
+				Log.v(TAG,"Counted "+jArray.length()+" patches.");
 				if (tabsAdapter.getCount() != jArray.length()) { // Check if tabs are already created
 					for (int i = 0; i < jArray.length(); i++){ // Work through the array of patches
 						JSONObject json = jArray.getJSONObject(i); // Extract a patch
@@ -146,17 +147,18 @@ public class GardenActivity extends SherlockFragmentActivity
 	}	
 	
 	/**
-	 * Catch clicks from the NewPlantDialog
+	 * Implementation of the NewPlantDialog listener
+	 * Is called when user clicks Save-button
 	 */
 	@Override
 	public void onSaveNewPlant(Plant plant) {
+		// Create new plant asynchronously off the main thread
 		new NewPlantCreator().execute(plant);
-		
 	}
 
 	//TODO Change to REST POST method in conjunction with the Connection class
 	/**
-	 * Creates the new plant on the server asynchronously from the main thread
+	 * Creates the new plant on the server asynchronously off the main thread
 	 * @author Magnus
 	 */
 	private class NewPlantCreator extends AsyncTask<Plant,Void,String>{
@@ -173,25 +175,31 @@ public class GardenActivity extends SherlockFragmentActivity
 										"name=" + name + 
 										"&description=" + desc +  
 										"&patch_id=" + plants[0].getPatch();
-				String newPlantId = new Connection().query(url);
+				String newPlantId = new Connection().query(url); // server creation
+				Log.v(TAG,"Created plant with id " + newPlantId);
 			return newPlantId;
 		}
 
 		@Override
 		protected void onPostExecute(String newPlantId) {
-			// Reports to user that a new plant has been created
-			toast( getString(R.string.new_plant_toast) + " (id:" + newPlantId + ")");			
+			// Reports to user whether a new plant has been created
+			// The toast should ideally be executed before the onPostExecute,
+			// because onPostExecute is avoided when canceled. But Toast needs the activity
+			// to still be active (on the main thread)
+			toast(getString(R.string.new_plant_toast)+" (id:"+newPlantId+")",false);
+			// TODO Update the fragment with the new plant (bypassing server?)
 			super.onPostExecute(newPlantId);
 		}
 	}
 
 	/**
 	 * Short method within activity's context that simplify toasting	
-	 * @param text
+	 * @param text The text to be shown
+	 * @param short_duration if false shown for long duration
 	 */
-	private void toast(String text){
-		Toast.makeText(this, "new plant id = " + text,
-				Toast.LENGTH_SHORT).show();
+	private void toast(String text, boolean short_duration){
+		int length = short_duration ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
+		Toast.makeText(this, text, length).show();
 	}
 	
 	

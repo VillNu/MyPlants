@@ -44,9 +44,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-
 public class MainActivity extends SherlockActivity {
-
 	protected static final int GARDEN_ID = 0;
 	public static final String EXTRA_GARDEN_ID = "nu.vill.myplants.GARDEN_ID";
 	public static final String EXTRA_GARDEN_NAME = "nu.vill.myplants.GARDEN_NAME";
@@ -56,6 +54,9 @@ public class MainActivity extends SherlockActivity {
 	ListView listView;
 	AsyncTask<?,?,?> gardenDownload;
 
+	/**
+	 * Sets up the view with the actionbar and listview
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);				
@@ -78,7 +79,6 @@ public class MainActivity extends SherlockActivity {
 		updateList();
 	}
 
-
 	/**
 	 * Does nothing since its state is recovered from the server
 	 */
@@ -88,6 +88,7 @@ public class MainActivity extends SherlockActivity {
 		super.onResume();	
 	}
 
+	// TODO Still need to investigate if this is the smartest way
 	/**
 	 * Cancels unnecessary updates of this Activity (the list of gardens)
 	 */
@@ -119,7 +120,7 @@ public class MainActivity extends SherlockActivity {
 	}
 
 	/**
-	 * Makes toasting shorter
+	 * Makes toasting shorter and simpler
 	 * @param message
 	 */
 	protected void toast(String message){
@@ -127,22 +128,24 @@ public class MainActivity extends SherlockActivity {
 	}
 
 	/**
-	 * Downloads gardens from server off the main thread and updates the list of gardens
-	 * the String passed to the  must be well formed URL and the response from the server must contain
-	 * some gardens formatted as an JSON object
+	 * Downloads gardens from server off the main thread and updates the list of gardens.
+	 * The String passed on execute() must be a well formed URL and the web server response
+	 * must contain JSON formatted gardens
 	 * @author Magnus
 	 */
 	private class ListOfGardensDownloader extends AsyncTask<String, Void, String> {
 		
 		@Override
 		protected String doInBackground(String... urls) {
-			return new Connection().query(urls[0]); // downloads the gardens
+			 // Download gardens
+			return new Connection().query(urls[0]);
 		}
 		
 		@Override
 		protected void onPostExecute(String backgroundResult) {
 			super.onPostExecute(backgroundResult);
-			updateListViewAdapter(strJasonsToGardenArray(backgroundResult));
+			// Update list of gardens
+			updateListViewAdapter(strJson2GardenArray(backgroundResult));
 		}
 	}
 
@@ -155,12 +158,13 @@ public class MainActivity extends SherlockActivity {
 		listView.setAdapter(gardensAdapter);	
 	}
 
+	// TODO Part of future bigger generalization effort
 	/**
 	 * Converts a JSON formatted string of gardens to a Garden array
 	 * @param strJasons JSON formatted string containing gardens 
 	 * @return array of Garden objects
 	 */
-	public static Garden[] strJasonsToGardenArray(String strJasons){
+	public static Garden[] strJson2GardenArray(String strJasons){
 		Garden[] gardenArray = null;
 		try {
 		JSONArray jArray = new JSONArray(strJasons);

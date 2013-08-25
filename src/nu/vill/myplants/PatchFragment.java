@@ -40,8 +40,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 
 public class PatchFragment extends SherlockFragment {
 	
-	private static final String TAG = "TabFragment";
+	private static final String TAG = "PatchFragment";
 	private int patchId;
+	private String patchName;
 	private ListView listView;
 	private static AsyncTask<String,Void,String> asyncListLoader;
 
@@ -50,10 +51,11 @@ public class PatchFragment extends SherlockFragment {
 		View view = inflater.inflate(nu.vill.myplants.R.layout.fragment_patch,
 				container, false);
 		
-		// Set the description for each Patch(tab) (shown above list of plants)
-		((TextView) view.findViewById(nu.vill.myplants.R.id.patch_title))
-				.setText(getArguments().getString("desc"));
 		patchId = getArguments().getInt("id");
+		patchName = getArguments().getString("name");
+		// Set the description for each Patch(tab) (shown above list of plants)
+		((TextView) view.findViewById(nu.vill.myplants.R.id.patch_description))
+				.setText(getArguments().getString("desc"));
 		listView = (ListView) view.findViewById(R.id.listViewPlants);
 
 		// Update the Listview (list of plants) asynchronously
@@ -71,6 +73,9 @@ public class PatchFragment extends SherlockFragment {
 		return view;
 	}	
 	
+	/**
+	 * 
+	 */
 	public void showNewPlantDialog() {
 		DialogFragment newPlantDialog = new NewPlantDialogFragment();
 		Bundle bundle = new Bundle();
@@ -79,9 +84,12 @@ public class PatchFragment extends SherlockFragment {
 		newPlantDialog.show(getFragmentManager(), "NewPlantDialog");
 	}
 
+	/**
+	 * Stops updates from the AsyncListLoader to this fragment after its been destroyed
+	 */
 	@Override
 	public void onDestroy() {
-		Log.d(TAG,"destroying fragment for patch " +  this.getArguments().getInt("id"));
+		Log.v(TAG,"destroying fragment for patch id "+patchId+" ("+patchName+")");
 		asyncListLoader.cancel(true);// stop list loading to prevent nullpointerexceptions
 		super.onDestroy();
 	}
@@ -95,6 +103,10 @@ public class PatchFragment extends SherlockFragment {
 							.execute(getString(R.string.plants_url) + patchId);
 	}
 
+	/**
+	 * Downloads plants for given patch
+	 * @author Magnus
+	 */
 	private class PatchDownloader extends AsyncTask<String, Void, String> {
 
 		@Override
@@ -119,12 +131,9 @@ public class PatchFragment extends SherlockFragment {
 	 * @param String (of JSON objects)
 	 * @return Plant[]
 	 */
-	public static Plant[] strJasonsToPlantArray(String strJasons){
-	Log.d(TAG, "Converting " + strJasons + " to array..");
-	
+	private Plant[] strJasonsToPlantArray(String strJasons){	
 		if (strJasons.equals("null"))
-			return new Plant[]{}; // return empty array
-		
+			return new Plant[]{}; // return empty array		
 		try {
 			JSONArray jArray = new JSONArray(strJasons);
 			Plant[] plantArray = new Plant[jArray.length()];
@@ -136,6 +145,7 @@ public class PatchFragment extends SherlockFragment {
 						json.getString("description"),
 						json.getInt("patch_id"));
 			}
+			Log.v(TAG, "Converted "+plantArray.length+" plants for patch "+patchId+".");
 			return plantArray; // return array with plants
 		}catch (Exception e){
 			Log.e(TAG, "Error : " + e.toString());

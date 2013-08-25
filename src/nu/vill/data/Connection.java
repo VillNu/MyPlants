@@ -65,16 +65,17 @@ public class Connection {
 			if (statusCode == 200) { // OK
 				HttpEntity entity = httpResponse.getEntity();
 				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(content),1024); // can buffer 1024 characters
 				String line;
 				StringBuilder stringBuilder = new StringBuilder(); 
 				while ((line = reader.readLine()) != null) {
 					stringBuilder.append(line);
 				}
-				Log.d(TAG, "Your data for " + url + " = " + stringBuilder.toString());
 				response = stringBuilder.toString();
+				Log.v(TAG, "Url: "+url+" returned "+response.length()+" characters.");
 			} else {
-				Log.d(TAG, "Failed to download file");
+				Log.w(TAG, "Failed to download file");
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
