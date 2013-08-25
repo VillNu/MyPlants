@@ -1,10 +1,10 @@
 MyPlants
 ========
 
-MyPlants is a little utility designed to ease management of information about your plants.
+MyPlants is a little Android app for management of information about your plants.
 You can keep information like dates of acquisition, care, latin name, or anything you like.
-Plants are separated by patches which in turn belong to different gardens. So you can for
-instance have a separate garden for your summer house and your apartment. 
+Plants are kept in different patches which in turn belong to different gardens. You can for
+instance have a separate garden for your summer house plants and those in your apartment. 
 
 The app is compatible with all devices from Android version 2.x Eclair but with a modern
 interface like on the Android 4.x Ice Cream Sandwich.
@@ -18,19 +18,19 @@ interface like on the Android 4.x Ice Cream Sandwich.
 Developed By
 ============
 
-* Magnus Duberg - <gusdubma@student.gu.se>
+* Vill Nu - <mangnus@vill.nu>
 
 
 
 License
 =======
 
-    Copyright 2013 Magnus Duberg
+    Copyright 2013 Vill Nu
 
-    Licensed under the NOO License, Version 100.0 (the "Noncense")
+    Licensed under the NOO Noncense, Version 100.0 (the "Noncense")
     NOO stands for No Over and Over again. 
-    You may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+    You may not use this file except in compliance with this Noncense.
+    You may obtain a copy of the Noncense at
 
        http://vill.nu/licenses/LICENSE-100.0
 
@@ -38,7 +38,7 @@ License
     distributed under this Noncense is distributed on an "AS ISN'T" BASIS,
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the Noncense for the specific language governing permissions and
-    limitations under the License.
+    limitations under the Noncense.
 
 
 
