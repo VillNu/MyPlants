@@ -52,7 +52,7 @@ public class MainAdapter extends ArrayAdapter<Garden>{
 	}
 	
 	/**
-	 * 
+	 * Returns the amount of gardens
 	 */
 	@Override
 	public int getCount() {
@@ -60,7 +60,7 @@ public class MainAdapter extends ArrayAdapter<Garden>{
 	}
 
 	/**
-	 * 
+	 * Returns a Garden at the specified position
 	 */
 	@Override
 	public Garden getItem(int position) {
@@ -68,15 +68,15 @@ public class MainAdapter extends ArrayAdapter<Garden>{
 	}
 
 	/**
-	 * 
+	 * Returns the id for the Garden at the specified position
 	 */
 	@Override
 	public long getItemId(int position) {
-		return position;
+		return gardens[position].getId();
 	}
 
 	/**
-	 * Returns an inflated view displaying data for the given garden
+	 * Returns an inflated view with data for the Garden at the specified position
 	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

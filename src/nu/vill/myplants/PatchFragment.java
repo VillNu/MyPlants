@@ -38,6 +38,10 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
+/**
+ * Contains the description of a patch and a list of all its plants
+ * @author Magnus
+ */
 public class PatchFragment extends SherlockFragment {
 	
 	private static final String TAG = "PatchFragment";
@@ -46,6 +50,9 @@ public class PatchFragment extends SherlockFragment {
 	private ListView listView;
 	private static AsyncTask<String,Void,String> asyncListLoader;
 
+	/**
+	 * Sets up the view for the patch with all its elements
+	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState){
 		View view = inflater.inflate(nu.vill.myplants.R.layout.fragment_patch,
@@ -68,13 +75,12 @@ public class PatchFragment extends SherlockFragment {
 			public void onClick(View v) {//Starting a new plant dialog
 				showNewPlantDialog();
 			}
-		});
-		
+		});		
 		return view;
 	}	
 	
 	/**
-	 * 
+	 * Shows a dialog for user input of new plant information
 	 */
 	public void showNewPlantDialog() {
 		DialogFragment newPlantDialog = new NewPlantDialogFragment();

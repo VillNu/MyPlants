@@ -25,17 +25,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 
+/**
+ * Populates a patch with its plants
+ * @author Magnus
+ */
 public class PatchAdapter extends BaseAdapter{
 
-	Plant[] plants;
-	Context context;
-	LayoutInflater layoutInflater;
+	private Plant[] plants;
+	private LayoutInflater layoutInflater;
 	
 	public PatchAdapter(Context c, Plant[] plants){
-		this.plants = plants;
-		this.context = c;
-		layoutInflater = (LayoutInflater)
-				c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+ 		this.plants = plants;
+		this.layoutInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
 	@Override
@@ -55,8 +56,8 @@ public class PatchAdapter extends BaseAdapter{
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null)
-			convertView = layoutInflater.inflate(R.layout.list_item, parent,false);
+		if (convertView == null) convertView = 
+				layoutInflater.inflate(R.layout.list_item, parent,false);
 		TextView plantName = (TextView) convertView.findViewById(R.id.textPlant);
 		plantName.setText(plants[position].getName());
 		TextView plantDesc = (TextView) convertView.findViewById(R.id.textPlant2);

@@ -74,9 +74,7 @@ public class MainActivity extends SherlockActivity {
 					long id) {
 				openGardenActivity((Garden) adapter.getItemAtPosition(pos));				
 			}
-		});
-
-		updateList();
+		});		
 	}
 
 	/**
@@ -85,7 +83,16 @@ public class MainActivity extends SherlockActivity {
 	@Override
 	protected void onResume() {
 		Log.v(TAG,"MainActivity resumed (task id:"+this.getTaskId()+")");
+		updateList(); // 
 		super.onResume();	
+	}
+
+	/**
+	 * Updates the list of gardens off the background thread and keeps a
+	 * reference to it so it can be killed onDestroy
+	 */
+	private void updateList(){
+		gardenDownload = new ListOfGardensDownloader().execute(getString(R.string.gardens_url));
 	}
 
 	// TODO Still need to investigate if this is the smartest way
@@ -100,14 +107,6 @@ public class MainActivity extends SherlockActivity {
 	}
 	
 	
-	/**
-	 * Updates the list of gardens off the background thread and keeps a
-	 * reference to it so it can be killed onDestroy
-	 */
-	private void updateList(){
-		gardenDownload = new ListOfGardensDownloader().execute(getString(R.string.gardens_url));
-	}
-
 	/**
 	 * Opens activity to manage the garden with the given id
 	 * @param garden
@@ -210,9 +209,6 @@ public class MainActivity extends SherlockActivity {
 			startActivity(chooser);
 		}
 	}
-
-	/* Not needed when ActionBarSherlock is used	
-	@Override	public boolean onCreateOptionsMenu(Menu menu) 	 */
 }
 
 

@@ -201,16 +201,4 @@ public class GardenActivity extends SherlockFragmentActivity
 		int length = short_duration ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG;
 		Toast.makeText(this, text, length).show();
 	}
-	
-	
-/*	
-	Not needed when ActionBarSherlock is used
-	private void setupActionBar(ActionBar aBar);
-
-	Not needed when ActionBarSherlock is used
-  	@Override	public boolean onCreateOptionsMenu(Menu menu);	
-
-	Not needed when ActionBarSherlock is used
-	@Override	public boolean onOptionsItemSelected(MenuItem item) {
-*/
 }

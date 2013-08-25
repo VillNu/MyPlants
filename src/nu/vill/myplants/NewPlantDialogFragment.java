@@ -31,6 +31,10 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 
+/**
+ * Fragment to hold the new plant dialog for user input
+ * @author Magnus
+ */
 public class NewPlantDialogFragment extends SherlockDialogFragment{
 	
 	// define how to report back to the parent
@@ -39,16 +43,17 @@ public class NewPlantDialogFragment extends SherlockDialogFragment{
 	}
 
 	private static final String TAG = "NewPlantDialogFragment";
-	
-	private NewPlantDialogListener listener;
-	private View view;
+	private NewPlantDialogListener listener; // activity to call back after completion
+	private View view; // reference for the onClickListeners
 	
 	/**
 	 * Necessary empty constructor
 	 */
 	public NewPlantDialogFragment() {}
 	
-	// Make sure activity hosts callback method
+	/**
+	 * Makes sure containing activity hosts the callback method
+	 */
 	@Override
 	public void onAttach(Activity activity){
 		super.onAttach(activity);
@@ -60,6 +65,9 @@ public class NewPlantDialogFragment extends SherlockDialogFragment{
 		}
 	}
 	
+	/**
+	 * Dialog (is created before the Fragment) 
+	 */
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity activity = getSherlockActivity();
@@ -69,19 +77,19 @@ public class NewPlantDialogFragment extends SherlockDialogFragment{
 		builder.setView(view);
 		builder.setTitle(R.string.new_plant_title);
 		builder.setPositiveButton(R.string.new_plant_positive_button,
-										new DialogInterface.OnClickListener() {
+		        new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface arg0, int arg1) {
 				String name = ((EditText) view.findViewById(R.id.newPlantName))
-														.getText().toString();
+				        .getText().toString();
 				String desc = ((EditText) view.findViewById(R.id.newPlantDesc))
-														.getText().toString();
+				        .getText().toString();
 				int patch_id = getArguments().getInt("patch_id");
 				listener.onSaveNewPlant(new Plant(name,desc, patch_id));
 			}
 		});
 		builder.setNegativeButton(R.string.new_plant_negative_button,
-										new DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 			}
@@ -89,9 +97,4 @@ public class NewPlantDialogFragment extends SherlockDialogFragment{
 		Log.d(TAG,"New " + builder.toString() + " created. in activity " + activity.toString());
 		return builder.create(); // returns an AlertDialog
 	}
-	
-	
-	
-	
-	
 }
